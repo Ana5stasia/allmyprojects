@@ -16,6 +16,12 @@ function mark_line!(r::Robot, side::HorizonSide)::Nothing
     end
 end
 
+function along!(r::Robot, side::HorizonSide)::Nothing
+    while !isborder(r, side)
+        move!(r, side)
+    end
+end
+
 function alongg!(r::Robot, side::HorizonSide, q::Integer)::Nothing
     for i in 1:q
         move!(r, side)
@@ -38,6 +44,8 @@ function draw_map!(r)
     end
     putmarker!(r)
     mark_line!(r, d)
+    along!(r, West)
+    along!(r, Sud)
     alongg!(r, Ost, numsteps_west)
-    alongg!(r, Nord, numsteps_nord)
+    alongg!(r, Nord, numsteps_sud)
 end
