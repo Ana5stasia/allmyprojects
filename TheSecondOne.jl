@@ -22,15 +22,15 @@ function alongg!(r::Robot, side::HorizonSide, q::Integer)::Nothing
     end
 end
 
-function inverse(side::HorizonSide)::HorizonSide
+function inverse!(side::HorizonSide)::HorizonSide
     return HorizonSide(mod(Int(side)-1, 4))
 end
 
 function perimeter!(r, side)
     numsteps_nord=numsteps_along!(r, Nord)
     numsteps_west=numsteps_along!(r, West)
-    d=side
-    while !ismarker(r)
+    d=Ost
+    for i in 1:4
         mark_line!(r, d)
         d=inverse!(d)
     end
