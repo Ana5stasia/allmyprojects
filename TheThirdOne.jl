@@ -22,9 +22,22 @@ function alongg!(r::Robot, side::HorizonSide, q::Integer)::Nothing
     end
 end
 
-function inverse(side::HorizonSide)::HorizonSide
-    return HorizonSide(mod(Int(side)-1, 4))
+function inverse!(side::HorizonSide)::HorizonSide
+    return HorizonSide(mod(Int(side)-2, 4))
 end
 
-function draw_map!(r, )
+function draw_map!(r)
+    numsteps_sud=numsteps_along!(r, Sud)
+    numsteps_west=numsteps_along!(r, West)
+    d=Ost
+    while !isborder(r, Nord)
+        putmarker!(r)
+        mark_line!(r, d)
+        move!(r, Nord)
+        d=inverse!(d)
+    end
+    putmarker!(r)
+    mark_line!(r, d)
+    alongg!(r, Ost, numsteps_west)
+    alongg!(r, Nord, numsteps_nord)
 end
