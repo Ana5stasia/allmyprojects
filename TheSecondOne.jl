@@ -26,7 +26,7 @@ function inverse!(side::HorizonSide)::HorizonSide
     return HorizonSide(mod(Int(side)-1, 4))
 end
 
-function perimeter!(r, side)
+function perimeter!(r)
     numsteps_nord=numsteps_along!(r, Nord)
     numsteps_west=numsteps_along!(r, West)
     d=Ost
