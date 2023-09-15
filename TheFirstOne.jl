@@ -17,7 +17,7 @@ function alongg!(r::Robot, side::HorizonSide, q::Integer)::Nothing
         move!(r, side)
     end
 end
-function inverse(side::HorizonSide)::HorizonSide
+function inverse!(side::HorizonSide)::HorizonSide
     return HorizonSide(mod(Int(side)+2, 4))
 end
 function numsteps_mark_along!(r::Robot, side::HorizonSide)::Int
@@ -34,13 +34,7 @@ r=Robot(animate=true)
 function mark_kross!(r::Robot)::Nothing
     for side in (Nord, West, Sud, Ost)
         num_steps = numsteps_mark_along!(r, side) 
-        alongg!(r, inverse(side), num_steps) 
+        alongg!(r, inverse!(side), num_steps) 
     end
     putmarker!(r) 
-end
-
-
-function perimeter!()
-    along!(r, Nord)
-    along!(r, West)
 end
