@@ -8,7 +8,7 @@ fuction alongg!(r::Robot,side::HorizonSide,q::Integer)::Nothing
 end
 
 function inverse!(side::HorizonSide)::HorizonSide
-    return HorizonSide(mod(Int(side)-1,4))
+    return HorizonSide(mod(Int(side)+2,4))
 end
 function find_hole(r::Robot)::Nothing
     side = Ost 
