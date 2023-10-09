@@ -1,5 +1,15 @@
 using HorizonSideRobots
 r=Robot(animate=true)
+function inverse!(side::HorizonSide)::HorizonSide
+    return HorizonSide(mod(Int(side)-2, 4))
+end
+function clockwise_side!(side::HorizonSide)::HorizonSide
+    return HorizonSide(mod(Int(side)+1,4))
+end
+function ag_clockwise_side!(side::HorizonSide)::HorizonSide
+    return HorizonSide(mod(Int(side)+3,4))
+end
+
 function numsteps_along!(r::Robot, side::HorizonSide)::Integer
     numst=0
     while !isborder(r, side)
@@ -7,13 +17,6 @@ function numsteps_along!(r::Robot, side::HorizonSide)::Integer
         numst+=1
     end
     return numst
-end
-
-function mark_line!(r::Robot, side::HorizonSide)::Nothing
-    while !isborder(r, side)
-        move!(r, side)
-        putmarker!(r)
-    end
 end
 
 function along!(r::Robot, side::HorizonSide)::Nothing
@@ -28,29 +31,57 @@ function alongg!(r::Robot, side::HorizonSide, q::Integer)::Nothing
     end
 end
 
-function inverse!(side::HorizonSide)::HorizonSide
-    return HorizonSide(mod(Int(side)-2, 4))
-end
-#side1 - Nord, Sud
-#side2 - OSt, West
-function draw_map!(r, side1, side2)
-    numsteps_1=numsteps_along!(r, side1)
-    numsteps_2=numsteps_along!(r, side2)
-    d1=inverse!(side1)
-    d2=inverse!(side2)
-    while !isborder(r, d1)
+function mark_line!(r::Robot, side::HorizonSide)::Nothing
+    while !isborder(r, side)
+        move!(r, side)
         putmarker!(r)
-        mark_line!(r, d2)
-        move!(r, d1)
-        d2=inverse!(d2)
     end
-    putmarker!(r)
-    mark_line!(r, d2)
-    along!(r, side2)
-    along!(r, side1)
-    alongg!(r, d1, numsteps_1)
-    alongg!(r, d2, numsteps_2)
 end
-draw_map!(r, Nord, West)
-draw_map!(r, Sud, West)
-draw_map!(r, Sud, Ost)
+
+function perimeter!(r)
+    d=Ost
+    for i in 1:4
+        mark_line!(r, d)
+        d=clockwise_side!(d)
+    end
+end
+
+function sneak!(r, side)
+    while !isborder(r, side)
+        (isborder(r, Ost)) ? break : move!(r,side)
+    end
+    if isborder(r, Ost)
+        my_ans = "border"
+    else
+        move!(r, Ost)
+        my_ans = inverse!(side)
+    end
+    return my_ans
+end
+
+function inner_perimeter!(r::Robot)::Nothing
+
+    a=numsteps_along!(r, Sud)
+    b=numsteps_along!(r, West)
+    
+    perimeter!(r)
+
+    side = Nord
+    
+    while side != "border"
+        side = sneak!(r, side)
+    end
+
+    for i in (Sud, Ost, Nord, West)
+        while isborder(r, clockwise_side!(i) )
+            putmarker!(r)
+            move!(r, i)
+        end
+        putmarker!(r)
+        move!(r, clockwise_side!(i) )
+    end 
+    along!(r, West)
+    along!(r, Sud)
+    alongg!(r, Nord, a)
+    alongg!(r, Ost, b)
+end
