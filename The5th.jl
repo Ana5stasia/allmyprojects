@@ -38,7 +38,7 @@ function mark_line!(r::Robot, side::HorizonSide)::Nothing
     end
 end
 
-function perimeter!(r)
+function perimeter!(r)::Nothing
     d=Ost
     for i in 1:4
         mark_line!(r, d)
@@ -46,7 +46,7 @@ function perimeter!(r)
     end
 end
 
-function sneak!(r, side)
+function sneak!(r, side)::Nothing
     while !isborder(r, side)
         (isborder(r, Ost)) ? break : move!(r,side)
     end
