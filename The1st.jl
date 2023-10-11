@@ -38,3 +38,4 @@ function mark_kross!(r::Robot)::Nothing
     end
     putmarker!(r) 
 end
+mark_kross!(r)
