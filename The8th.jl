@@ -16,7 +16,7 @@ function spiral(r::Robot)::Nothing
         steps += 1
     end
 end
-function special_move!(r::Robot,side::HorizonSide,num::Int)
+function special_move!(r::Robot,side::HorizonSide,num::Int)::Nothing
     for _ in 1:num
         if ismarker(r)
             return nothing
@@ -24,3 +24,4 @@ function special_move!(r::Robot,side::HorizonSide,num::Int)
         move!(r,side)
     end
 end
+spiral(r)
