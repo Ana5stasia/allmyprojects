@@ -21,3 +21,4 @@ function find_hole(r::Robot)::Nothing
     move!(r,Nord)
     alongg!(r,side,n)
 end
+find_hole!(r)
