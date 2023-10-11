@@ -50,3 +50,4 @@ function mark_kross_2!(r::Robot)::Nothing
     end
     putmarker!(r) 
 end
+mark_kross_2!(r)
