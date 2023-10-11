@@ -37,3 +37,4 @@ function perimeter!(r)
     alongg!(r, Ost, numsteps_west)
     alongg!(r, Sud, numsteps_nord)
 end
+perimeter!(r)
