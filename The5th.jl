@@ -85,3 +85,4 @@ function inner_perimeter!(r::Robot)::Nothing
     alongg!(r, Nord, a)
     alongg!(r, Ost, b)
 end
+inner_perimeter!(r)
