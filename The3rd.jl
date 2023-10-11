@@ -32,7 +32,7 @@ function inverse!(side::HorizonSide)::HorizonSide
     return HorizonSide(mod(Int(side)-2, 4))
 end
 
-function draw_map!(r)
+function draw_map!(r)::Nothing
     numsteps_sud=numsteps_along!(r, Sud)
     numsteps_west=numsteps_along!(r, West)
     d=Ost
@@ -49,3 +49,4 @@ function draw_map!(r)
     alongg!(r, Ost, numsteps_west)
     alongg!(r, Nord, numsteps_sud)
 end
+draw_map!(r)
