@@ -13,7 +13,7 @@ function numsteps_along!(r::Robot, side::HorizonSide, flag::Bool)::Tuple
 end
 
 function move_w_s_corner!(r::Robot)::Tuple
-    numsteps_nord=numsteps_along!(r, Nord, true)
+    numsteps_nord=numsteps_along!(r, Sud, true)
     to_south=numsteps_nord[1]
     flagg=numsteps_nord[2]
     numsteps_west=numsteps_along!(r, West, flagg)
@@ -29,7 +29,7 @@ function alongg!(r::Robot, side::HorizonSide, q::Integer)::Nothing
 end
 
 function inverse!(side::HorizonSide)::HorizonSide
-    return HorizonSide(mod(Int(side)-1, 4))
+    return HorizonSide(mod(Int(side)-2, 4))
 end
 
 function mark_line!(r::Robot, side::HorizonSide, f::Bool)::Bool
@@ -43,23 +43,31 @@ function mark_line!(r::Robot, side::HorizonSide, f::Bool)::Bool
             f=!f
         end
     end
+    putmarker!(r)
     return f
 end
 
-function perimeter!(r)
-    a=move_w_s_corner!
+function along!(r, side)
+    while !isborder(r, side)
+        move!(r, side)
+    end
+end
+
+function p!(r)
+    a=move_w_s_corner!(r)
     to_nord=a[1]
     to_east=a[2]
     flg=a[3]
-        while !isborder(r, Nord)
-            flg=mark_line!(r, d, flg)
-            move!(r, Nord)
-            flg=!flg
-            d=inverse!(d)
-        end
-        mark_line!(r, d, flg)
-        along!(r, West)
-        along!(r, Sud)
-        alongg!(r, Ost, to_east)
-        alongg!(r, Nord, to_nord)
+    d=Ost
+    while !isborder(r, Nord)
+        flg=mark_line!(r, d, flg)
+        move!(r, Nord)
+        flg=!flg
+        d=inverse!(d)
+    end
+    mark_line!(r, d, flg)
+    along!(r, West)
+    along!(r, Sud)
+    alongg!(r, Ost, to_east)
+    alongg!(r, Nord, to_nord)
 end
