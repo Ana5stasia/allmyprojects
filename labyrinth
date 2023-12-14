@@ -34,28 +34,28 @@ function HSR.move!(r :: WalkingRobot, side)
 end
 
 # Рассчитывает направление повёрнутое против часовой стрелки.
-anticlockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 1, 4))
+clockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 1, 4))
 # Рассчитывает направление повёрнутое по часовой стрелке.
-clockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4))
+counterclockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4))
 # Рассчитывает направление обратное данному
-inverse(side :: HorizonSide) = anticlockwise(anticlockwise(side))
+reverse(side::HorizonSide)=HorizonSide(mod(Int(side)-2,4)) 
 
 # Обходит покругу лабиринт, находящийся со стороны side от робота robot. На каждом шаге вдоль стены вызывает tick с роботом и стороной, с которой находится стена лабиринта, обход которого совершается.
 function go_around_labirint(tick, robot :: Robot, side :: HorizonSide)
     haveMovedAtLeastOnce = false
     robot = WalkingRobot(robot, Coordinates(0, 0))
-    moveSide = anticlockwise(side)
+    moveSide = clockwise(side)
     while !haveMovedAtLeastOnce || (robot.coordinates.x!=0 || robot.coordinates.y!=0)
         while isborder(robot, moveSide)
-            moveSide = anticlockwise(moveSide)
-            tick(robot, clockwise(moveSide))    
+            moveSide = clockwise(moveSide)
+            tick(robot, counterclockwise(moveSide))    
         end
         move!(robot, moveSide)
-        while !isborder(robot, clockwise(moveSide))
-            moveSide = clockwise(moveSide)
+        while !isborder(robot, counterclockwise(moveSide))
+            moveSide = counterclockwise(moveSide)
             move!(robot, moveSide)
         end
-        tick(robot, clockwise(moveSide))    
+        tick(robot, counterclockwise(moveSide))    
         haveMovedAtLeastOnce = true
     end
 end
