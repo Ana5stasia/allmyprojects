@@ -1,0 +1,92 @@
+using HorizonSideRobots
+HSR = HorizonSideRobots
+ 
+mutable struct Coordinates
+    x :: Int
+    y :: Int
+end
+ 
+function HSR.move!(r :: Coordinates, side)
+    if side == Nord 
+        r.x += 1
+    elseif side == inverse(Nord)
+        r.x -= 1
+    elseif side == West
+        r.y -= 1
+    else
+        r.y += 1
+    end
+end
+
+# Данный робот поддерживает свои актуальные координаты при движении. 
+struct WalkingRobot
+    robot :: Robot
+    coordinates :: Coordinates
+end
+
+function HSR.isborder(r :: WalkingRobot, side)
+    isborder(r.robot, side)
+end
+
+function HSR.move!(r :: WalkingRobot, side)
+    move!(r.robot, side)
+    move!(r.coordinates, side)
+end
+
+# Рассчитывает направление повёрнутое против часовой стрелки.
+anticlockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 1, 4))
+# Рассчитывает направление повёрнутое по часовой стрелке.
+clockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4))
+# Рассчитывает направление обратное данному
+inverse(side :: HorizonSide) = anticlockwise(anticlockwise(side))
+
+# Обходит покругу лабиринт, находящийся со стороны side от робота robot. На каждом шаге вдоль стены вызывает tick с роботом и стороной, с которой находится стена лабиринта, обход которого совершается.
+function go_around_labirint(tick, robot :: Robot, side :: HorizonSide)
+    haveMovedAtLeastOnce = false
+    robot = WalkingRobot(robot, Coordinates(0, 0))
+    moveSide = anticlockwise(side)
+    while !haveMovedAtLeastOnce || (robot.coordinates.x!=0 || robot.coordinates.y!=0)
+        while isborder(robot, moveSide)
+            moveSide = anticlockwise(moveSide)
+            tick(robot, clockwise(moveSide))    
+        end
+        move!(robot, moveSide)
+        while !isborder(robot, clockwise(moveSide))
+            moveSide = clockwise(moveSide)
+            move!(robot, moveSide)
+        end
+        tick(robot, clockwise(moveSide))    
+        haveMovedAtLeastOnce = true
+    end
+end
+
+# Считает площадь лабиринта, стена которого находится со стороны side. 
+function sum_around_labirint(r, side)
+    sum = 0
+    go_around_labirint(r, side) do robot, leadingSide 
+        if leadingSide == West && isborder(robot, West)
+            sum += robot.coordinates.y - 1
+        elseif leadingSide == inverse(West) && isborder(robot, inverse(West))
+            sum -= robot.coordinates.y
+        end
+    end
+    return sum
+end
+
+# Проверяет, является ли робот снаружи лабиринта, стена которого находится со стороны side. 
+function is_outside_labirint(robot, side)
+    max_leading_side = ()
+    max_x_coordinate = 0
+
+    go_around_labirint(robot, side) do robot, leadingSide
+        if robot.coordinates.x > max_x_coordinate 
+            max_x_coordinate = robot.coordinates.x
+            max_leading_side = leadingSide
+        elseif robot.coordinates.x == max_x_coordinate 
+            if leadingSide == Nord 
+                max_leading_side = Nord
+            end
+        end
+    end
+    return max_leading_side != Nord
+end
