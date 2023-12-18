@@ -23,7 +23,7 @@ struct WalkingRobot
     robot :: Robot
     coordinates :: Coordinates
 end
-
+#объявление функция для wr
 function HSR.isborder(r :: WalkingRobot, side)
     isborder(r.robot, side)
 end
@@ -33,12 +33,12 @@ function HSR.move!(r :: WalkingRobot, side)
     move!(r.coordinates, side)
 end
 
-
+#функции изменения направления
 clockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 1, 4))
 counterclockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4))
 reverse(side::HorizonSide)=HorizonSide(mod(Int(side)-2,4)) 
 
-# Обходит покругу лабиринт, находящийся со стороны side от робота robot. На каждом шаге вдоль стены вызывает tick с роботом и стороной, с которой находится стена лабиринта, обход которого совершается.
+# Обход покругу лабиринта, находящийся со стороны side от robot. 
 function go_around_labirint(tick, robot :: Robot, side :: HorizonSide)
     haveMovedAtLeastOnce = false
     robot = WalkingRobot(robot, Coordinates(0, 0))
@@ -58,7 +58,7 @@ function go_around_labirint(tick, robot :: Robot, side :: HorizonSide)
     end
 end
 
-# Считает площадь лабиринта, стена которого находится со стороны side. 
+# подсчет площади лабиринта, стена которого находится со стороны side. 
 function sum_around_labirint(r, side)
     sum = 0
     go_around_labirint(r, side) do robot, leadingSide 
@@ -71,7 +71,7 @@ function sum_around_labirint(r, side)
     return sum
 end
 
-# Проверяет, является ли робот снаружи лабиринта, стена которого находится со стороны side. 
+# проверка того, является ли робот снаружи лабиринта, стена которого находится со стороны side. 
 function is_outside_labirint(robot, side)
     max_leading_side = ()
     max_x_coordinate = 0
