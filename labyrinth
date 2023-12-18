@@ -18,7 +18,7 @@ function HSR.move!(r :: Coordinates, side)
     end
 end
 
-# Данный робот поддерживает свои актуальные координаты при движении. 
+# робот запоминает свои координаты
 struct WalkingRobot
     robot :: Robot
     coordinates :: Coordinates
@@ -33,11 +33,9 @@ function HSR.move!(r :: WalkingRobot, side)
     move!(r.coordinates, side)
 end
 
-# Рассчитывает направление повёрнутое против часовой стрелки.
+
 clockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 1, 4))
-# Рассчитывает направление повёрнутое по часовой стрелке.
 counterclockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4))
-# Рассчитывает направление обратное данному
 reverse(side::HorizonSide)=HorizonSide(mod(Int(side)-2,4)) 
 
 # Обходит покругу лабиринт, находящийся со стороны side от робота robot. На каждом шаге вдоль стены вызывает tick с роботом и стороной, с которой находится стена лабиринта, обход которого совершается.
