@@ -40,10 +40,10 @@ reverse(side::HorizonSide)=HorizonSide(mod(Int(side)-2,4))
 
 # Обход покругу лабиринта, находящийся со стороны side от robot. 
 function go_around_labirint(tick, robot :: Robot, side :: HorizonSide)
-    haveMovedAtLeastOnce = false
+    Moved = false
     robot = WalkingRobot(robot, Coordinates(0, 0))
     moveSide = clockwise(side)
-    while !haveMovedAtLeastOnce || (robot.coordinates.x!=0 || robot.coordinates.y!=0)
+    while !Moved || (robot.coordinates.x!=0 || robot.coordinates.y!=0)
         while isborder(robot, moveSide)
             moveSide = clockwise(moveSide)
             tick(robot, counterclockwise(moveSide))    
@@ -54,7 +54,7 @@ function go_around_labirint(tick, robot :: Robot, side :: HorizonSide)
             move!(robot, moveSide)
         end
         tick(robot, counterclockwise(moveSide))    
-        haveMovedAtLeastOnce = true
+        Moved = true
     end
 end
 
