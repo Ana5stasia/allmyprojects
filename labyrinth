@@ -64,7 +64,7 @@ function sum_around_labirint(r, side)
     go_around_labirint(r, side) do robot, leadingSide 
         if leadingSide == West && isborder(robot, West)
             sum += robot.coordinates.y - 1
-        elseif leadingSide == inverse(West) && isborder(robot, inverse(West))
+        elseif leadingSide == reverse(West) && isborder(robot, reverse(West))
             sum -= robot.coordinates.y
         end
     end
