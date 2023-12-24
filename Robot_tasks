@@ -249,7 +249,7 @@ function marklim!(r::Robot,side::HorizonSide)::Nothing
 end 
 
 """удаление на дистанцию вдвое больше"""
-function req_halfdist(r::Robot, side::HorizonSide)::Nothing
+function req_halfdist(r::Robot, side::HorizonSide)
     r=r
     side=side
     function halfdist!(r, side)
