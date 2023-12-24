@@ -9,7 +9,7 @@ end
 function HSR.move!(r :: Coordinates, side)
     if side == Nord 
         r.x += 1
-    elseif side == inverse(Nord)
+    elseif side == reverse(Nord)
         r.x -= 1
     elseif side == West
         r.y -= 1
