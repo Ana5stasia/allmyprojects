@@ -35,7 +35,7 @@ end
 
 #функции изменения направления
 clockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 1, 4)) #против часовой
-counterclockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4)) №по часовой
+counterclockwise(side :: HorizonSide) = HorizonSide(mod(Int(side) + 3, 4)) #по часовой
 reverse(side::HorizonSide)=HorizonSide(mod(Int(side)-2,4)) #на 180
 
 # Обход покругу лабиринта, находящийся со стороны side от robot. 
