@@ -1,0 +1,101 @@
+#Создание пользовательского типа данных. {T} - T — это параметр типа для структуры Polynomial.
+#Параметры типа позволяют создавать обобщенные (параметризованные) типы, которые могут работать с различными типами данных. 
+#В данном случае T является параметром типа, который будет заменен конкретным типом при создании объектов типа Polynomial (Int, Float).
+#T для структуры обычно берется из типа элементов, которые передается в конструктор структуры.
+struct Polynomial{T}
+    coefficients::Vector{T}
+end
+
+#T может быть любым типом, но этот тип должен соответствовать определенным условиям, указанным после where
+
+# Функция для вычисления значения многочлена в точке x
+function evaluate(p::Polynomial{T}, x::T) where T
+    result = zero(T)
+    for (i, coef) in enumerate(p.coefficients)
+        result += coef * x^(i-1)
+    end
+    return result
+end
+
+# Переопределение оператора * для умножения многочленов
+function Base.:*(p1::Polynomial{T}, p2::Polynomial{T}) where T
+    deg1 = length(p1.coefficients) - 1
+    deg2 = length(p2.coefficients) - 1
+    result_deg = deg1 + deg2
+    result_coeffs = zeros(T, result_deg + 1)
+
+    for i in 0:deg1
+        for j in 0:deg2
+            result_coeffs[i + j + 1] += p1.coefficients[i + 1] * p2.coefficients[j + 1]
+        end
+    end
+    return Polynomial{T}(result_coeffs)
+end
+
+# Переопределение оператора + для сложения многочленов
+function Base.:+(p1::Polynomial{T}, p2::Polynomial{T}) where T
+    deg1 = length(p1.coefficients) - 1
+    deg2 = length(p2.coefficients) - 1
+    result_deg = max(deg1, deg2)
+    result_coeffs = zeros(T, result_deg + 1)
+
+    for i in 0:result_deg
+        result_coeffs[i + 1] += get(p1.coefficients, i + 1, zero(T)) + get(p2.coefficients, i + 1, zero(T))
+    end
+
+    return Polynomial{T}(result_coeffs)
+end
+
+# Переопределение оператора / для деления многочленов
+function Base.:/(p1::Polynomial{T}, p2::Polynomial{T}) where T
+    deg1 = length(p1.coefficients) - 1
+    deg2 = length(p2.coefficients) - 1
+    result_deg = deg1 + deg2
+    result_coeffs = zeros(T, result_deg + 1)
+
+    for i in 0:deg1
+        for j in 0:deg2
+            result_coeffs[i + j + 1] += p1.coefficients[i + 1] / p2.coefficients[j + 1]
+        end
+    end
+    return Polynomial{T}(result_coeffs)
+end
+
+# Переопределение оператора - для вычитания многочленов
+function Base.:-(p1::Polynomial{T}, p2::Polynomial{T}) where T
+    deg1 = length(p1.coefficients) - 1
+    deg2 = length(p2.coefficients) - 1
+    result_deg = max(deg1, deg2)
+    result_coeffs = zeros(T, result_deg + 1)
+
+    for i in 0:result_deg
+        result_coeffs[i + 1] += get(p1.coefficients, i + 1, zero(T)) - get(p2.coefficients, i + 1, zero(T))
+    end
+
+    return Polynomial{T}(result_coeffs)
+end
+
+# Функция для вывода многочлена в виде строки
+function Base.show(io::IO, p::Polynomial{T}) where T
+    deg = length(p.coefficients) - 1
+    terms = [string(coef, "x^", i-1) for (i, coef) in enumerate(p.coefficients) if coef != zero(T)]
+    joined_terms = join(terms, " + ")
+
+    if isempty(joined_terms)
+        print(io, "0")
+    else
+        print(io, joined_terms)
+    end
+end
+
+# Пример использования
+poly1 = Polynomial([1, 2, 3])  # представляет многочлен 1 + 2x + 3x^2
+poly2 = Polynomial([4, 5, 6])  # представляет многочлен 4 + 5x + 6x^2
+
+println("poly1 = ", poly1)
+println("poly2 = ", poly2)
+println("poly1 + poly2 = ", poly1 + poly2)
+println("poly1 * poly2 = ", poly1 * poly2)
+
+x_value = 2
+println("evaluate(poly1, $x_value) = ", evaluate(poly1, x_value))
