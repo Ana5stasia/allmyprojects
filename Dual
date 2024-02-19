@@ -1,0 +1,36 @@
+#Создание пользовательского типа данных. {T} - T — это параметр типа для структуры Dual.
+struct Dual{T}
+    a::T
+    b::T
+end
+#Переопределение арифметических действий
+function Base.:+(x::Dual{T}, y::Dual{T}) where T
+    return Dual{T}(x.a+y.a, (x.b+y.b))
+end
+function Base.:-(x::Dual{T}, y::Dual{T}) where T
+    return Dual{T}(x.a-y.a, (x.b-y.b))
+end
+function Base.:*(x::Dual{T}, y::Dual{T}) where T
+    return Dual{T}(x.a*y.a, (x.b*y.a+x.a*y.b))
+end
+function Base.:/(x::Dual{T}, y::Dual{T}) where T
+    return Dual{T}(x.a/y.a, ((x.b*y.a+x.a*y.b)/y.a^2))
+end
+function Base.show(io::IO, x::Dual{T}) where T
+    print(io, string(x.a, " + ", x.b, 'ε'))
+end
+function n_sqrt(x, n)
+    return x^(1/n)
+end
+function dual_sqrt(x::Dual{T}, n::Int) where T
+    return Dual{T}(n_sqrt(x.a, n),  x.b/(n*n_sqrt(x.a^(n-1), n)))
+end
+
+#Пример использования
+x=Dual(4, 24)
+y=Dual(4, 24)
+println("x + y =", x+y)
+println("x - y =", x-y)
+println("x * y =", x*y)
+println("x / y =", x/y)
+println("square(y) = ", dual_sqrt(y, 2))
