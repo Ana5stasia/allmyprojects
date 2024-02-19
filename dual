@@ -29,8 +29,8 @@ end
 #Пример использования
 x=Dual(4, 24)
 y=Dual(4, 24)
-println("x + y =", x+y)
-println("x - y =", x-y)
-println("x * y =", x*y)
-println("x / y =", x/y)
+println("x + y = ", x+y)
+println("x - y = ", x-y)
+println("x * y = ", x*y)
+println("x / y = ", x/y)
 println("square(y) = ", dual_sqrt(y, 2))
