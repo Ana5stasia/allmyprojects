@@ -149,6 +149,7 @@ println("derivative(poly2) = ", derivative(poly2))
 
 
 x_value = 2.0
+#Строковая интерполяция позволяет вставлять значения переменных и выражений непосредственно в строку.
 println("evaluate(poly1, $x_value) = ", evaluate(poly1, x_value))
 println("evaluate(derivative(poly1), $x_value) = ", evaluate(derivative(poly1), x_value))
 println("evaluate(derivative(poly2), $x_value) = ", evaluate(derivative(poly2), x_value))
