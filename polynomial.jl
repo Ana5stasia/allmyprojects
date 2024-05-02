@@ -49,7 +49,7 @@ function Base.:+(p1::Polynomial{T}, p2::Polynomial{T}) where T
     for i in 0:result_deg
         result_coeffs[i + 1] += get(p1.coefficients, i + 1, zero(T)) + get(p2.coefficients, i + 1, zero(T))
     end
-
+    # get(откуда берем, ключ, значение по дефолту)
     return Polynomial{T}(result_coeffs)
 end
 
@@ -99,6 +99,7 @@ end
 
 # Функция для вывода в консоль многочлена в виде строки
 function Base.show(io::IO, p::Polynomial{T}) where T
+    #IO в языке программирования Julia представляет собой абстрактный тип для ввода-вывода данных. 
     terms = [string(coef, "x^", i-1) for (i, coef) in enumerate(p.coefficients) if coef != zero(T)]
     terms=reverse(terms)
     joined_terms=""
@@ -112,6 +113,7 @@ function Base.show(io::IO, p::Polynomial{T}) where T
     if isempty(joined_terms)
         println(io, "0")
     elseif isequal(joined_terms[2], '+')
+        #Функция isequal в языке программирования Julia используется для сравнения двух объектов на равенство. 
         println(io, joined_terms[3:end-3])
     else
         println(io, joined_terms[2:end-3])
