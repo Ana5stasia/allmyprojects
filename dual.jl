@@ -1,3 +1,4 @@
+#Дуальные числа или (гипер)комплексные числа параболического типа — гиперкомплексные числа вида a + bε, где a и b - вещественные числа, а ε- абстрактный элемент, квадрат которого равен нулю, но сам он нулю не равен.
 #Создание пользовательского типа данных. {T} - T — это параметр типа для структуры Dual.
 struct Dual{T}
     a::T
@@ -35,11 +36,13 @@ end
 Base. sin(x::Dual{T}) where T = Dual{T}(sin(x.a), x.b*cos(x.a))
 Base. cos(x::Dual{T}) where T = Dual{T}(cos(x.a), (-1)*x.b*sin(x.a))
 Base. tan(x::Dual{T}) where T = Dual{T}(tan(x.a), x.b*(1/(cos(x.a))^2))
-Base. cat(x::Dual{T}) where T = Dual{T}(cat(x.a), x.b*(-1/(sin(x.a))^2))
+Base. cot(x::Dual{T}) where T = Dual{T}(cot(x.a), x.b*(-1/(sin(x.a))^2))
 Base. asin(x::Dual{T}) where T = Dual{T}(asin(x.a), x.b*(1/sqrt(1-x^2)))
 Base. acos(x::Dual{T}) where T = Dual{T}(acos(x.a), x.b*(-1/(sqrt(1-x^2))))
 Base. atan(x::Dual{T}) where T = Dual{T}(atan(x.a), x.b*(1/(1+x^2)))
-Base. acat(x::Dual{T}) where T = Dual{T}(atan(x.a), x.b*(-1/(1+x^2)))
+function acot(x::Dual{T}) where T 
+    return Dual{T}(1/atan(x.a), x.b*(-1/(1+x^2)))
+end
 Base. exp(x::Dual{T}) where T = Dual{T}(exp^x.a, x.b*exp^x.a)
 Base. log(x::Dual{T}) where T = Dual{T}(log(x.a), x.b*(1/(x.a)))
 Base. log2(x::Dual{T}) where T = Dual{T}(log(2, x.a), x.b*(1/(x.a*log(2))))
@@ -48,7 +51,7 @@ Base. log(s::AbstractFloat, x::Dual{T}) where T = Dual{T}(log(s, x.a), x.b*(1/(x
 
 #Пример использования
 x=Dual(4, 24)
-y=Dual(4, 24)
+y=Dual(2, 3)
 println("x = ", x)
 println("y = ", y)
 println("x + y = ", x+y)
