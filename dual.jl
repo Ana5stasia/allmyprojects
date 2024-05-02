@@ -13,18 +13,21 @@ end
 function Base.:*(x::Dual{T}, y::Dual{T}) where T
     return Dual{T}(x.a*y.a, (x.b*y.a+x.a*y.b))
 end
-function Base.:^(x::Dual{T}) where T
-    return Dual{T}(x.a*x.a, (x.b*x.a+x.a*x.b))
-end
 function Base.:/(x::Dual{T}, y::Dual{T}) where T
     return Dual{T}(x.a/y.a, ((x.b*y.a+x.a*y.b)/y.a^2))
 end
+
+# Функция для вывода в консоль
 function Base.show(io::IO, x::Dual{T}) where T
     print(io, string(x.a, " + ", x.b, 'ε'))
 end
+
+# Функция корня n-ой степени
 function n_sqrt(x, n)
     return x^(1/n)
 end
+
+# Функция корня n-ой степени для дуального числа
 function dual_sqrt(x::Dual{T}, n::Int) where T
     return Dual{T}(n_sqrt(x.a, n),  x.b/(n*n_sqrt(x.a^(n-1), n)))
 end
@@ -43,15 +46,13 @@ Base. log2(x::Dual{T}) where T = Dual{T}(log(2, x.a), x.b*(1/(x.a*log(2))))
 Base. log10(x::Dual{T}) where T = Dual{T}(log(10, x.a), x.b*(1/(x.a*log(10))))
 Base. log(s::AbstractFloat, x::Dual{T}) where T = Dual{T}(log(s, x.a), x.b*(1/(x.a*log(s))))
 
-
-
-
 #Пример использования
 x=Dual(4, 24)
 y=Dual(4, 24)
+println("x = ", x)
+println("y = ", y)
 println("x + y = ", x+y)
 println("x - y = ", x-y)
 println("x * y = ", x*y)
 println("x / y = ", x/y)
-println("square(y) = ", dual_sqrt(y, 2))
 println("square(y) = ", dual_sqrt(y, 2))
